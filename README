@@ -1,1 +1,15 @@
 ENERGY
+This program is base on nova architecture 
+It's used to dispatch and migration virtual machine
+
+energy-api privode some restful api to web ui
+
+energy-sampler will sample some machine information
+       libvirt sample virtual machine information
+       ipmi  sample some machine information and control computer power
+
+energy-server will load some manager which can control openstack, hadoop and so on.
+openstack manager will control vm migration and computer power
+it's a thrift server and run some periodism task
+
+energy-agent is a agent to request server.
