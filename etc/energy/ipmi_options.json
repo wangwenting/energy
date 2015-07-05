@@ -1,0 +1,2 @@
+{"fans":["System Fan 1","System Fan 2","System Fan 3","System Fan 4"] ,"thermal":["P1 DTS Therm Mgn", "P2 DTS Therm Mgn", "DIMM Thrm Mrgn 1", "DIMM Thrm Mrgn 2", "DIMM Thrm Mrgn 3", "DIMM Thrm Mrgn 4"],"inlet_temp":"Front Panel Temp", "outlet_temp":"Exit Air Temp", "airflow":"System Airflow"}
+

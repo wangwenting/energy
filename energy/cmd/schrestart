@@ -1,0 +1,36 @@
+#!/bin/bash
+config_file=/etc/nova/nova.conf
+function set_config()
+{
+sed -i "/scheduler_driver/d" $config_file
+sed -i "/scheduler_available_filters/d" $config_file
+
+if [ -z $1 ]; then
+    echo "input is null"
+    return 1
+fi
+if [ $1 = "THERMAL" ]; then
+cat <<"EOF" >> $config_file
+scheduler_driver=nova.scheduler.thermal.ThermalScheduler
+compute_scheduler_driver=nova.scheduler.thermal.ThermalScheduler
+EOF
+    return 0
+elif [ $1 = "CUPS" ]; then
+cat <<"EOF" >> $config_file
+scheduler_driver=nova.scheduler.cups.CupsScheduler
+compute_scheduler_driver=nova.scheduler.cups.CupsScheduler
+EOF
+    return 0
+elif [ $1 = "NOVA" ]; then
+cat <<"EOF" >> $config_file
+scheduler_driver=nova.scheduler.filter_scheduler.FilterScheduler
+compute_scheduler_driver=nova.scheduler.filter_scheduler.FilterScheduler
+EOF
+    return 0
+fi
+return 1
+}
+
+set_config $1
+
+service nova-scheduler restart

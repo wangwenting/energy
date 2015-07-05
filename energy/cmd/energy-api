@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+#           Copyright (c)  2015, Intel Corporation.
+#
+#   This Software is furnished under license and may only be used or
+# copied in accordance with the terms of that license. No license,
+# express or implied, by estoppel or otherwise, to any intellectual
+# property rights is granted by this document. The Software is
+# subject to change without notice, and should not be construed as
+# a commitment by Intel Corporation to market, license, sell or
+# support any product or technology. Unless otherwise provided for
+# in the * license under which this Software is provided, the
+# Software is provided AS IS, with no warranties of any kind,
+# express or implied. Except as expressly permitted by the Software
+# license, neither Intel Corporation nor its suppliers assumes any
+# responsibility or liability for any errors or inaccuracies that
+# may appear herein. Except as expressly permitted by the Software
+# license, no part of the Software may be reproduced, stored in a
+# retrieval system, transmitted in any form, or distributed by any
+# means without the express written consent of Intel Corporation.
+from paste.deploy import loadapp
+from wsgiref.simple_server import make_server
+from eventlet import wsgi
+import eventlet
+import sys, os, time
+from oslo.config import cfg
+import traceback
+
+from energy.common import config
+from energy.common import log
+
+energy_api_opts = [
+    cfg.StrOpt('api_config',
+                default='/etc/energy/energy-api.ini',
+                help='the paste.deploy will load it',
+               ),
+]
+CONF = cfg.CONF
+CONF.register_opts(energy_api_opts, group='api')
+
+if __name__ == "__main__":
+
+    try:
+        config.parse_args(sys.argv[1:])
+        log.setup('energy-api')
+        config_file = CONF.api.api_config
+        LOG = log.getLogger('energy-api')
+        LOG.debug("Start Energy Api Service Config file is:%s" %config_file)
+        app_name = "energy-api"
+        wsgi_app = loadapp("config:%s" % os.path.abspath(config_file), app_name)
+        wsgi.server(eventlet.listen(('', 8080)), wsgi_app)
+    except Exception,e:
+        traceback.print_exc()     

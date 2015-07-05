@@ -1,0 +1,21 @@
+#!/usr/bin/python
+import sys
+import traceback
+from energy.common import config
+from energy.common import log
+from oslo.config import cfg
+
+from energy.agent.service import AgentServiceIns
+
+CONF = cfg.CONF
+
+if __name__=="__main__":
+    try:
+        config.parse_args(sys.argv[1:])
+        log.setup('energy-agent')
+        server = AgentServiceIns()
+        server.run()
+    except Exception,e:
+        traceback.print_exc()
+        
+   

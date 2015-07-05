@@ -1,0 +1,24 @@
+#!/usr/bin/python
+import sys
+import traceback
+from oslo.config import cfg
+import eventlet
+eventlet.monkey_patch()
+
+from energy import service
+from energy.common import config
+from energy.common import log
+
+CONF = cfg.CONF
+
+if __name__=="__main__":
+    try:
+        config.parse_args(sys.argv[1:])
+        log.setup('energy-server')
+        server = service.Service.create()
+        service.serve(server)
+        service.wait()
+    except Exception,e:
+        traceback.print_exc()
+        
+   
